@@ -45,4 +45,25 @@ public class MoviesService {
         );
     }
 
+    public Movies acceptStarRating(String title, Integer starRating) {
+        MovieEntity movie = repository.findByTitle(title);
+        if(movie != null) {
+           // List<Integer> rating = repository.findByRating(title);
+            List<Integer> rating = movie.getUserReview()
+                    .stream()
+                    .map(val -> val.getStarRating())
+                    .collect(Collectors.toList());
+            movie.getUserReview().add(new UserReviewEntity(starRating, null));
+            if(!movie.getUserReview().isEmpty()){
+                rating.add(starRating);
+                double averageRating = rating.stream()
+                        .mapToDouble(val -> val)
+                        .average().getAsDouble();
+                movie.setStarRating(averageRating);
+            }
+            repository.save(movie);
+            return mapToMovies(movie);
+        }
+        return null;
+    }
 }

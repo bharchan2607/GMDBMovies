@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,6 +84,15 @@ public class MoviesControllerTest {
                 .andExpect(result ->
                          assertEquals("Movie Doesn't Exist",
                                  result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void acceptStarRating() throws Exception {
+        String movieName="The Avengers";
+        mockMvc.perform(post("/movies/"+movieName+"/"+5))
+                .andExpect(status().isAccepted());
+
+
     }
 
 }

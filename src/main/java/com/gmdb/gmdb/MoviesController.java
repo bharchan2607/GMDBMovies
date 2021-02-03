@@ -1,8 +1,7 @@
 package com.gmdb.gmdb;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +22,13 @@ public class MoviesController {
     @GetMapping("/movies/{title}")
     public Movies getMovieByTitle(@PathVariable String title) {
         return service.getMovieByTitle(title);
+    }
+
+    @PostMapping("/movies/{title}/{starRating}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Movies getMovieByTitle(@PathVariable String title,
+                                  @PathVariable Integer starRating) {
+        return null;
     }
 
 }
