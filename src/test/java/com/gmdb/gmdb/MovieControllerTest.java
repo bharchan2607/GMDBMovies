@@ -136,4 +136,20 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("$.userReviewDTOS.[0].review").value("This is a good movie"))
                 .andExpect(jsonPath("$.userReviewDTOS.[0].starRating").value(5));
     }
-}
+
+    @Test
+    public void submitReviewNoStarRating() throws Exception {
+        String movieName = "The Avengers";
+        String review = "This is a good movie";
+        UserReviewDTO userReviewDTO = new UserReviewDTO(0, review);
+        mockMvc.perform(post("/movies/" + movieName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(userReviewDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException()
+                        instanceof StarRatingRequiredException))
+                .andExpect(result ->
+                        assertEquals("Please submit Star Rating!!",
+                                result.getResolvedException().getMessage()));
+    }
+    }

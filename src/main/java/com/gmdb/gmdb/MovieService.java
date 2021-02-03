@@ -54,6 +54,9 @@ public class MovieService {
     }
 
     public MovieDTO acceptStarRating(String title, UserReviewDTO userReviewDTO) {
+        if(userReviewDTO.getStarRating() == 0){
+            throw new StarRatingRequiredException("Please submit Star Rating!!");
+        }
         MovieEntity movie = repository.findByTitle(title);
 
         if(movie != null) {

@@ -1,8 +1,13 @@
 API Specification:
 ------------------
 getAllMovies
+------------------------
 GET --- /movies --- Retrieves All movies
+
+Status Code: 200
+
 Response:
+---------
 [
 {
 "title": "The Avengers",
@@ -31,8 +36,13 @@ Response:
 ]
 
 getMovieByTitle:
+-------------------------------------------------------------------
 GET ---- /movies/{title}
+
+Status code: 200
+
 Response:
+---------
 {
 "title": "Steel",
 "director": "Kenneth Johnson",
@@ -40,6 +50,44 @@ Response:
 "release": "1997",
 "description": "A scientist for the military turns himself into a cartoon-like superhero when a version of one of his own weapons is being used against enemies.",
 "rating": 0
+}
+
+Accept Star Rating and Review:
+------------------------------
+POST ---- /movies/{title}
+
+Status code: 202
+
+Request:
+--------
+{
+"title":"The Avengers",
+"userReviewDTO":
+{
+"starRating":5,
+"review":"Good Movie"
+
+}
+
+Response:
+---------
+{
+"title": "Steel",
+"director": "Kenneth Johnson",
+"actors": "Shaquille O'Neal, Annabeth Gish, Judd Nelson, Richard Roundtree",
+"release": "1997",
+"description": "A scientist for the military turns himself into a cartoon-like superhero when a version of one of his own weapons is being used against enemies.",
+"rating": 4.5,
+"userReviewDTOs":
+[{
+"starRating":5,
+"review":"Good Movie"
+},
+{
+"starRating":4,
+"review":"Good Movie"
+}
+]
 }
 
 User Stories:

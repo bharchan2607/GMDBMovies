@@ -114,4 +114,11 @@ public class MovieServiceTest {
         assertEquals(3,movie.getUserReviewDTOS().get(1).getStarRating());
         assertEquals("Bad Movie",movie.getUserReviewDTOS().get(1).getReview());
     }
+
+    @Test
+    public void submitReviewNoRating(){
+        StarRatingRequiredException exception = assertThrows(StarRatingRequiredException.class,()->{
+            movieService.acceptStarRating("The Avengers",new UserReviewDTO(0,"Bad Movie"));});
+        assertEquals("Please submit Star Rating!!", exception.getMessage());
+    }
 }
