@@ -21,6 +21,18 @@ public class MoviesService {
                 .collect(Collectors.toList());
     }
 
+
+    public Movies getMovieByTitle(String title) throws MovieNotFoundException {
+        MovieEntity movie = repository.findByTitle(title);
+        if(movie == null){
+            throw new MovieNotFoundException("Movie Doesn't Exist");
+        }
+        return mapToMovies(movie);
+    }
+
+
+
+
     private Movies mapToMovies(MovieEntity movieEntity) {
         return new Movies(
                 movieEntity.getId(),
@@ -32,4 +44,5 @@ public class MoviesService {
                 movieEntity.getStarRating()
         );
     }
+
 }

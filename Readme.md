@@ -30,7 +30,17 @@ Response:
 }
 ]
 
-
+getMovieByTitle:
+GET ---- /movies/{title}
+Response:
+{
+"title": "Steel",
+"director": "Kenneth Johnson",
+"actors": "Shaquille O'Neal, Annabeth Gish, Judd Nelson, Richard Roundtree",
+"release": "1997",
+"description": "A scientist for the military turns himself into a cartoon-like superhero when a version of one of his own weapons is being used against enemies.",
+"rating": 0
+}
 
 User Stories:
 -------------

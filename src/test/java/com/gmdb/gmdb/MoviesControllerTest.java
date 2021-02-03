@@ -7,7 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,6 +61,28 @@ public class MoviesControllerTest {
                 .andExpect(jsonPath("$.[1].description").value("Superman returns to Earth after spending five years in space examining his homeworld Krypton. But he finds things have changed while he was gone, and he must once again prove himself important to the world."))
                 .andExpect(jsonPath("$.[2].releaseYear").value("1997"));
 
+    }
+    @Test
+    public void getMovieByTitle() throws Exception {
+        String movieName = "The Avengers";
+        mockMvc.perform(get("/movies/"+movieName))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("The Avengers"))
+                .andExpect(jsonPath("$.description").value("Earth's mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity"))
+                .andExpect(jsonPath("$.releaseYear").value("2012"));
+
+    }
+
+    @Test
+    public void getMovieByTitle_NonExistent() throws Exception {
+        String movieName = "Superman";
+        mockMvc.perform(get("/movies/"+movieName))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException()
+                        instanceof MovieNotFoundException))
+                .andExpect(result ->
+                         assertEquals("Movie Doesn't Exist",
+                                 result.getResolvedException().getMessage()));
     }
 
 }
