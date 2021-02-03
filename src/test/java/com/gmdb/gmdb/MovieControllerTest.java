@@ -1,5 +1,6 @@
 package com.gmdb.gmdb;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -22,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class MoviesControllerTest {
+public class MovieControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -30,8 +32,12 @@ public class MoviesControllerTest {
     @Autowired
     MovieRepository repository;
 
+    @Autowired
+    ObjectMapper mapper;
+
     @BeforeEach
     public void setup(){
+        repository.deleteAll();
         MovieEntity movie1 = new MovieEntity("The Avengers","Joss Whedon",
                 "Robert Downey Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth",
                 "2012","Earth's mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity"
@@ -90,20 +96,44 @@ public class MoviesControllerTest {
     @Test
     public void acceptStarRating() throws Exception {
         String movieName="The Avengers";
-        mockMvc.perform(post("/movies/"+movieName+"/"+5))
-                .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.starRating").value(5));
+        String review = "This is a good movie";
+        UserReviewDTO userReviewDTO = new UserReviewDTO(5,review);
 
-        mockMvc.perform(post("/movies/"+movieName+"/"+3))
+        mockMvc.perform(post("/movies/"+movieName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(userReviewDTO)))
                 .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.starRating").value(4));
+                 .andExpect(jsonPath("$.starRating").value(5));;
 
-        mockMvc.perform(post("/movies/"+movieName+"/"+3))
+                 userReviewDTO = new UserReviewDTO(3,review);
+        mockMvc.perform(post("/movies/"+movieName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(userReviewDTO)))
                 .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.starRating").value(11/3.0)
-                );
+                .andExpect(jsonPath("$.starRating").value(4));;
+
+
+        mockMvc.perform(post("/movies/"+movieName)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(userReviewDTO)))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.starRating").value(11/3.0));;
 
 
     }
 
+
+
+    @Test
+    public void acceptUserReview() throws Exception {
+        String movieName="The Avengers";
+        String review = "This is a good movie";
+        UserReviewDTO userReviewDTO = new UserReviewDTO(5,review);
+        mockMvc.perform(post("/movies/"+movieName)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(mapper.writeValueAsString(userReviewDTO)))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.userReviewDTOS.[0].review").value("This is a good movie"))
+                .andExpect(jsonPath("$.userReviewDTOS.[0].starRating").value(5));
+    }
 }

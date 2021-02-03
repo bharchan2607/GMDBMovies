@@ -23,6 +23,7 @@ public class UserReviewEntity {
     private Integer starRating;
     private String review;
 
+
     public UserReviewEntity(Integer starRating, String review) {
         this.starRating = starRating;
         this.review = review;
