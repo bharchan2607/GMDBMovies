@@ -42,4 +42,16 @@ public class MovieEntity {
 
     public MovieEntity() {
     }
+
+    public MovieEntity(Long id, String title, String director, String actors, String releaseYear, String description, Double starRating) {
+        this.id = id;
+        this.title = title;
+        this.director = director;
+        this.actors = actors;
+        this.releaseYear = releaseYear;
+        this.description = description;
+        this.starRating = starRating;
+        this.userReview = new ArrayList<UserReviewEntity>();
+    }
+
 }

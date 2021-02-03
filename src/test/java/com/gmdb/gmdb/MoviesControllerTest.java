@@ -1,5 +1,6 @@
 package com.gmdb.gmdb;
 
+import com.jayway.jsonpath.JsonPath;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,7 +91,17 @@ public class MoviesControllerTest {
     public void acceptStarRating() throws Exception {
         String movieName="The Avengers";
         mockMvc.perform(post("/movies/"+movieName+"/"+5))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.starRating").value(5));
+
+        mockMvc.perform(post("/movies/"+movieName+"/"+3))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.starRating").value(4));
+
+        mockMvc.perform(post("/movies/"+movieName+"/"+3))
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.starRating").value(11/3.0)
+                );
 
 
     }

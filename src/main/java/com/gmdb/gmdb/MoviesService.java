@@ -47,6 +47,7 @@ public class MoviesService {
 
     public Movies acceptStarRating(String title, Integer starRating) {
         MovieEntity movie = repository.findByTitle(title);
+
         if(movie != null) {
            // List<Integer> rating = repository.findByRating(title);
             List<Integer> rating = movie.getUserReview()
@@ -61,7 +62,7 @@ public class MoviesService {
                         .average().getAsDouble();
                 movie.setStarRating(averageRating);
             }
-            repository.save(movie);
+            movie = repository.save(movie);
             return mapToMovies(movie);
         }
         return null;

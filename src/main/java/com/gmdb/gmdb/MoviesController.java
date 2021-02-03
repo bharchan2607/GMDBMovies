@@ -28,7 +28,7 @@ public class MoviesController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Movies getMovieByTitle(@PathVariable String title,
                                   @PathVariable Integer starRating) {
-        return null;
+        return service.acceptStarRating(title, starRating);
     }
 
 }

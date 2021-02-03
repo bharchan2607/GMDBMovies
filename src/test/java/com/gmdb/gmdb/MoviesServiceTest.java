@@ -67,14 +67,22 @@ public class MoviesServiceTest {
 
     @Test
     public void acceptStarRating(){
-        when(movieRepository.findByTitle("The Avengers")).thenReturn(new MovieEntity("The Avengers","Joss Whedon",
-                "Robert Downey Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth",
-                "2012","Earth's mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity"
-                ,0D));
+        MovieEntity movieEntity =
+                new MovieEntity(18l, "The Avengers","Joss Whedon",
+                        "Robert Downey Jr., Chris Evans, Mark Ruffalo, Chris Hemsworth",
+                        "2012","Earth's mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity"
+                        ,0D);
+        when(movieRepository.findByTitle("The Avengers")).thenReturn(movieEntity);
+
+        when(movieRepository.save(movieEntity)).thenReturn(movieEntity);
+
         Movies movie = moviesService.acceptStarRating("The Avengers",5);
         verify(movieRepository,times(1)).findByTitle("The Avengers");
         assertEquals(5,movie.getStarRating());
 
+        movie = moviesService.acceptStarRating("The Avengers",3);
+        verify(movieRepository,times(2)).findByTitle("The Avengers");
+        assertEquals(4,movie.getStarRating());
     }
 
 }
